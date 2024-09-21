@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			window.onload = function () {
+				function getParameterByName(name, url = window.location.href) {
+					name = name.replace(/[\[\]]/g, '\\$&');
+					var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+						results = regex.exec(url);
+					if (!results) return null;
+					if (!results[2]) return '';
+					return decodeURIComponent(results[2].replace(/\+/g, ' '));
+				}
+
+				var telegramBaseLink = 't.me/';
+				var https = 'https://';
+				var www = 'www.';
+				var fallbackURL = getParameterByName('u');
+				var channelFallback = getParameterByName('c');
+
+				if (channelFallback) {
+					if (channelFallback.includes(https)) {
+						if (channelFallback.includes(www))
+							fallbackURL = channelFallback.replace(https, '');
+						else fallbackURL = channelFallback.replace(https, www);
+					} else if (!channelFallback.includes(www)) {
+						fallbackURL = telegramBaseLink + channelFallback;
+					}
+				} else if (fallbackURL) {
+					if (fallbackURL.includes(https)) {
+						if (fallbackURL.includes(www))
+							fallbackURL = fallbackURL.replace(https, '');
+						else fallbackURL = fallbackURL.replace(https, www);
+					} else if (!fallbackURL.includes(www)) {
+						fallbackURL = telegramBaseLink + fallbackURL;
+					}
+				} else return;
+
+				var androidApp = `intent://${fallbackURL}#Intent;package=org.telegram.messenger;scheme=https;end`;
+				var iosApp = `tg://resolve?domain=${fallbackURL}`;
+
+				if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+					window.location.href = iosApp;
+					window.setTimeout(function () {
+						window.location.href = https + fallbackURL;
+					}, 25);
+				} else if (/Android/i.test(navigator.userAgent)) {
+					window.location.href = androidApp;
+					window.setTimeout(function () {
+						window.location.href = https + fallbackURL;
+					}, 25);
+				} else {
+					window.location.href = https + fallbackURL;
+				}
+
+				function killPopup() {
+					window.removeEventListener('pagehide', killPopup);
+				}
+
+				window.addEventListener('pagehide', killPopup);
+			};
+		</script>
+	</body>
+</html>
