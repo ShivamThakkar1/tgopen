@@ -41,7 +41,7 @@
 				} else return;
 
 				var androidApp = `intent://${fallbackURL}#Intent;package=org.telegram.messenger;scheme=https;end`;
-				var iosApp = `tg://resolve?domain=${fallbackURL}`;
+				var iosApp = `telegram://resolve?domain=${fallbackURL}`;
 
 				if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
 					window.location.href = iosApp;
