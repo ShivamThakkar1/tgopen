@@ -1,23 +1,37 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title></title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        
-        <script type="text/javascript">
-        
-        const sites = [
-        'casehaven.in'
-    	];
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      window.onload = function () {
+        // Function to get the URL parameter 'c'
+        function getParameterByName(name, url = window.location.href) {
+          name = name.replace(/[\[\]]/g, '\\$&');
+          var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+          if (!results) return null;
+          if (!results[2]) return '';
+          return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
 
-    randomSite = function() {
-        const i = parseInt(Math.random() * sites.length);
-        location.href = sites[i];
-    }
-        
-        </script>
-    </head>
-    <body onload="randomSite();">
-    
-    </body>
+        // Predefined static URLs based on the value of 'c'
+        var redirectMap = {
+          "wallswipe": "https://casehaven.in"
+        };
+
+        // Get the 'c' parameter
+        var cParam = getParameterByName('c');
+
+        // Check if the 'c' value has a corresponding static URL in the redirectMap
+        if (cParam && redirectMap[cParam]) {
+          window.location.href = redirectMap[cParam];
+        } else {
+          document.body.innerHTML = 'Invalid or missing URL parameter.';
+        }
+      };
+    </script>
+  </body>
 </html>
